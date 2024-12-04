@@ -110,3 +110,30 @@ void addLoadStation(Station *a, int id, long long load){
     }
 }
 
+long long totalLoadSum(Station *a, long long *sum){
+    if(a == NULL){
+        return 0;
+    }
+    *sum += a->totalLoad;
+    totalLoadSum(a->left, sum);
+    totalLoadSum(a->right, sum);
+
+    return *sum;
+}
+
+int stationCount(Station *a, int *count){
+    if(a == NULL){
+        return 0;
+    }
+    (*count)++;
+    stationCount(a->left, count);
+    stationCount(a->right,count);
+
+    return *count;
+}
+
+double stationYield(long long totalCapacity, long long totalLoad){
+    double a = (double)totalLoad / totalCapacity;
+    a = a*100;
+    return a;
+}

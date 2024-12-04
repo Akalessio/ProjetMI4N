@@ -10,5 +10,22 @@ typedef struct station{
     struct station *right;
 }Station;
 
+Station *buildStation(int, long long);
+
+void updateHeight(Station *);
+
+Station *rotateLeft(Station *);
+
+Station *rotateRight(Station *);
+
+Station *insertStationAVL(Station *, int , long long );
+
+void addLoadStation(Station *, int , long long);
+
+long long totalLoadSum(Station *, long long *);
+
+int stationCount(Station *, int *);
+
+double stationYield(long long, long long );
 
 #endif
