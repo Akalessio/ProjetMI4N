@@ -96,8 +96,5 @@ Station *insertStationAVL(Station *a, int id, long long capacity){
         a = rotateRight(a);
     }
     return a;
-
-    add()
-
 }
 
