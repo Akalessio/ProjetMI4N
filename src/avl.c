@@ -10,20 +10,20 @@ Station *buildStation(int id, long long capacity){
     a->capacity = capacity;
     a->left = NULL;
     a->right = NULL;
-    a->heigt = 1;
+    a->height = 1;
     a->totalLoad = 0;
 
     return a;
 }
 void updateHeight(Station *a){
     if(a->right != NULL && a->left != NULL) {
-        a->heigt = maxInt(a->left->heigt, a->right->heigt) + 1;
+        a->height = maxInt(a->left->height, a->right->height) + 1;
     }else if(a->right != NULL && a->left == NULL){
-        a->heigt = a->right->heigt + 1;
+        a->height = a->right->height + 1;
     }else if(a->right == NULL && a->left != NULL){
-        a->heigt = a->left->heigt + 1;
+        a->height = a->left->height + 1;
     }else if(a->right == NULL && a->left == NULL){
-        a->heigt = 1;
+        a->height = 1;
     }
 }
 
@@ -72,29 +72,41 @@ Station *insertStationAVL(Station *a, int id, long long capacity){
     updateHeight(a);
 
     if(a->right != NULL && a->left != NULL) {
-        balance = a->right->heigt - a->left->heigt;
+        balance = a->right->height - a->left->height;
     }else if(a->right != NULL && a->left == NULL){
-        balance = a->right->heigt;
+        balance = a->right->height;
     }else if(a->right == NULL && a->left != NULL){
-        balance = - a->left->heigt;
+        balance = - a->left->height;
     }else if(a->right == NULL && a->left == NULL){
         balance = 0;
     }
 
     if(balance > 1 && id > a->right->id){
         a = rotateLeft(a);
-    }
-    if(balance < 1 && id < a->left->id){
+    }if(balance < -1 && id < a->left->id){
         a = rotateRight(a);
-    }
-    if(balance > 1 && id < a->right->id){
+    }if(balance > 1 && id < a->right->id){
         a->right = rotateRight(a->right);
         a = rotateLeft(a);
-    }
-    if(balance < 1 && id > a->right->id){
+    }if(balance < -1 && id > a->right->id){
         a->left = rotateLeft(a->left);
         a = rotateRight(a);
     }
+
     return a;
+}
+
+void addLoadStation(Station *a, int id, long long load){
+    if(a == NULL){
+        return;
+    }
+
+    if (id < a->id){
+        addLoadStation(a->left, id, load);
+    }else if(id > a->id){
+        addLoadStation(a->right, id, load);
+    }else if(id == a->id){
+        a->totalLoad += load;
+    }
 }
 

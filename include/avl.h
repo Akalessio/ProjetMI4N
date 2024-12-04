@@ -5,7 +5,7 @@ typedef struct station{
     int id;
     long long capacity;
     long long totalLoad;
-    int heigt;
+    int height;
     struct station *left;
     struct station *right;
 }Station;
