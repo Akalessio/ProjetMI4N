@@ -88,7 +88,7 @@ Station *insertStationAVL(Station *a, int id, long long capacity){
     }if(balance > 1 && id < a->right->id){
         a->right = rotateRight(a->right);
         a = rotateLeft(a);
-    }if(balance < -1 && id > a->right->id){
+    }if(balance < -1 && id > a->left->id){
         a->left = rotateLeft(a->left);
         a = rotateRight(a);
     }
