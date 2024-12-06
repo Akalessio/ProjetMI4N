@@ -5,7 +5,9 @@
 
 Station *buildStation(int id, long long capacity){
     Station *a = malloc(sizeof(Station));
-
+    if(a == NULL){
+        exit(1);
+    }
     a->id = id;
     a->capacity = capacity;
     a->left = NULL;
@@ -56,6 +58,8 @@ Station *rotateRight(Station *a){
 Station *insertStationAVL(Station *a, int id, long long capacity){
     int balance = 0;
 
+
+
     if(a == NULL){
         return buildStation(id , capacity);
     }
@@ -68,6 +72,7 @@ Station *insertStationAVL(Station *a, int id, long long capacity){
     if(id == a->id){
         return a;
     }
+
 
     updateHeight(a);
 
@@ -88,7 +93,7 @@ Station *insertStationAVL(Station *a, int id, long long capacity){
     }if(balance > 1 && id < a->right->id){
         a->right = rotateRight(a->right);
         a = rotateLeft(a);
-    }if(balance < -1 && id > a->right->id){
+    }if(balance < -1 && id > a->left->id){
         a->left = rotateLeft(a->left);
         a = rotateRight(a);
     }
@@ -136,4 +141,20 @@ double stationYield(long long totalCapacity, long long totalLoad){
     double a = (double)totalLoad / totalCapacity;
     a = a*100;
     return a;
+}
+
+void printInOrder(Station *a) {
+    if (a == NULL) return;
+    printInOrder(a->left);
+    printf("Station ID: %d, Capacity: %lld, Load: %lld\n", a->id, a->capacity, a->totalLoad);
+    printInOrder(a->right);
+}
+
+void clearAVL(Station *a){
+    if(a == NULL){
+        return;
+    }
+    clearAVL(a->left);
+    clearAVL(a->right);
+    free(a);
 }

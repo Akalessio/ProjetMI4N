@@ -28,4 +28,8 @@ int stationCount(Station *, int *);
 
 double stationYield(long long, long long );
 
+void printInOrder(Station *);
+
+void clearAVL(Station *a);
+
 #endif
