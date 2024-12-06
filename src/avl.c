@@ -158,3 +158,4 @@ void clearAVL(Station *a){
     clearAVL(a->right);
     free(a);
 }
+
