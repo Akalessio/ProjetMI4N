@@ -1,2 +1,6 @@
 .idea/
 cmake-build-*
+input/c-wire_v00.dat
+input/c-wire_v25.dat
+outputstation.csv
+outputuser.csv
