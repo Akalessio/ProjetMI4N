@@ -2,6 +2,8 @@
 argh=0
 arge=0
 
+start_time=$(date +%s)
+
 if [ -f lv_all.csv ]; then
     rm -rf lv_all.csv
 fi
@@ -110,6 +112,9 @@ if [ $argh -eq 1 ] || [ $arge -eq 1 ]; then
     echo "    Optional arguments :"
     echo "        a number                      Plant Number : required to treat a specific Power Plant if not specified with process all the Power Plant"
     echo "        -h                            Help         : used to display this help panel"
+    end_time=$(date +%s)
+    elapsed_time=$((end_time - start_time))
+    echo "the whole process ended prematurely and last ${elapsed_time} second"
     exit 202
 fi
 
@@ -304,9 +309,15 @@ if [ -n "$4" ]; then
   fi
 fi
 
+end_time=$(date +%s)
+elapsed_time=$((end_time - start_time))
+echo "the sort process lasted for ${elapsed_time} seconds"
+start_time=$(date +%s)
+
 exec="projetMI4N"
 
 if [ ! -f $exec ]; then
+  echo -e "\n"
   echo "no executable found, trying compilation with make"
   echo -e "\n\n"
   make clean
@@ -328,6 +339,11 @@ fi
 if [ -z "$4" ]; then
     ./$exec "$1" "$2" "$user"
 fi
+
+end_time=$(date +%s)
+elapsed_time=$((end_time - start_time))
+echo "the C process lasted for ${elapsed_time} seconds"
+start_time=$(date +%s)
 
 if [ -f lv_all.csv ]; then
     head -n 1 "lv_all.csv" > lv_all_minmax.csv
@@ -352,6 +368,12 @@ if [ -f hva_comp.csv ]; then
     head -n 1 "hva_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "hva_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hva_comp.csv"
 fi
+
+end_time=$(date +%s)
+elapsed_time=$((end_time - start_time))
+echo "the second sort process lasted for ${elapsed_time} seconds"
+echo -e "\n"
+start_time=$(date +%s)
 
 
 
