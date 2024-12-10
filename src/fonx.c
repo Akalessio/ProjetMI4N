@@ -1,4 +1,6 @@
 #include "../include/fonx.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 int maxInt(int a, int b){
     if(a>=b){
@@ -8,3 +10,8 @@ int maxInt(int a, int b){
     }
 }
 
+void fileCheck(FILE *a){
+     if(a == NULL){
+         exit(10);
+     }
+}

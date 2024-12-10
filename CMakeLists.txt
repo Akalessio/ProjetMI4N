@@ -13,4 +13,6 @@ add_executable(projetMI4N
         src/avl.c
         include/fonx.h
         src/fonx.c
-        )
+        src/csvManaging.c
+        include/csvManaging.h
+)

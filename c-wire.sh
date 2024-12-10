@@ -28,7 +28,7 @@ if [ $argh -ne 1 ]; then
     fi
 fi
 
-filename=$(basename "$1")
+filename="input/$(basename "$1")"
 
 if [ ! -e "$1" ];then
             echo "==================================================="
@@ -98,18 +98,33 @@ if [ $argh -eq 1 ] || [ $arge -eq 1 ]; then
     exit 202
 fi
 
+graphdir="graphs"
+tmpdir="tmp"
+
+if [ ! -d $graphdir ]; then
+    mkdir $graphdir
+fi
+
+if [ -d $tmpdir ]; then
+    rm -rf $tmpdir
+    mkdir $tmpdir
+fi
+
+if [ ! -d $tmpdir ]; then
+    mkdir $tmpdir
+fi
 
 if [ -z "$4" ]; then
  if [ "$2" == "--hvb"  ]; then
       awk -F';' '
       NR == 1 { print; next }
       {
-      if ($2 == "$4" && $3 == "-" && $5 == "-" ){
+      if ($2 != "-" && $3 == "-" && $5 == "-" ){
         $1 = $1 $2
         print
       }
 
-      }' OFS=';' "$filename" > outputstation.csv
+      }' OFS=';' "$filename" > tmp/outputstation.csv
       awk -F';' '
           NR == 1 { print; next }
           {
@@ -118,7 +133,7 @@ if [ -z "$4" ]; then
             print
           }
 
-          }' OFS=';' "$filename" > outputuser.csv
+          }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
   if [ "$2" == "--hva"  ]; then
       awk -F';' '
@@ -129,7 +144,7 @@ if [ -z "$4" ]; then
         print
       }
 
-      }' OFS=';' "$filename" > outputstation.csv
+      }' OFS=';' "$filename" > tmp/outputstation.csv
       awk -F';' '
           NR == 1 { print; next }
           {
@@ -138,7 +153,7 @@ if [ -z "$4" ]; then
             print
           }
 
-          }' OFS=';' "$filename" > outputuser.csv
+          }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
   if [ "$2" == "--lv"  ]; then
       awk -F';' '
@@ -149,7 +164,7 @@ if [ -z "$4" ]; then
         print
       }
 
-      }' OFS=';' "$filename" > outputstation.csv
+      }' OFS=';' "$filename" > tmp/outputstation.csv
       awk -F';' '
           NR == 1 { print; next }
           {
@@ -158,7 +173,7 @@ if [ -z "$4" ]; then
             print
           }
 
-          }' OFS=';' "$filename" > outputuser.csv
+          }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
 fi
 
@@ -173,7 +188,7 @@ if [ -n "$4" ]; then
         print
       }
 
-      }' OFS=';' "$filename" > outputstation.csv
+      }' OFS=';' "$filename" > tmp/outputstation.csv
       awk -F';' -v S4="$4" '
           NR == 1 { print; next }
           {
@@ -182,7 +197,7 @@ if [ -n "$4" ]; then
             print
           }
 
-          }' OFS=';' "$filename" > outputuser.csv
+          }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
   if [ "$2" == "--hva"  ]; then
       awk -F';' -v S4="$4" '
@@ -193,7 +208,7 @@ if [ -n "$4" ]; then
         print
       }
 
-      }' OFS=';' "$filename" > outputstation.csv
+      }' OFS=';' "$filename" > tmp/outputstation.csv
       awk -F';' -v S4="$4" '
           NR == 1 { print; next }
           {
@@ -202,7 +217,7 @@ if [ -n "$4" ]; then
             print
           }
 
-          }' OFS=';' "$filename" > outputuser.csv
+          }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
   if [ "$2" == "--lv"  ]; then
       awk -F';' -v S4="$4" '
@@ -213,7 +228,7 @@ if [ -n "$4" ]; then
         print
       }
 
-      }' OFS=';' "$filename" > outputstation.csv
+      }' OFS=';' "$filename" > tmp/outputstation.csv
       awk -F';' -v S4="$4" '
           NR == 1 { print; next }
           {
@@ -222,7 +237,7 @@ if [ -n "$4" ]; then
             print
           }
 
-          }' OFS=';' "$filename" > outputuser.csv
+          }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
 fi
 
@@ -241,24 +256,6 @@ if [ ! -f $exec ]; then
     echo "compilation with make failed"
     exit 2
   fi
-fi
-
-
-
-graphdir="graphs"
-tmpdir="tmp"
-
-if [ ! -d $graphdir ]; then
-    mkdir $graphdir
-fi
-
-if [ -d $tmpdir ]; then
-    rm -rf $tmpdir
-    mkdir $tmpdir
-fi
-
-if [ ! -d $tmpdir ]; then
-    mkdir $tmpdir
 fi
 
 if [ -n "$4" ]; then

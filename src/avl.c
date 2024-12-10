@@ -115,26 +115,23 @@ void addLoadStation(Station *a, int id, long long load){
     }
 }
 
-long long totalLoadSum(Station *a, long long *sum){
+void totalLoadSum(Station *a, long long *sumL, long long *sumC){
     if(a == NULL){
-        return 0;
+        return;
     }
-    *sum += a->totalLoad;
-    totalLoadSum(a->left, sum);
-    totalLoadSum(a->right, sum);
-
-    return *sum;
+    *sumL += a->totalLoad;
+    *sumC += a->capacity;
+    totalLoadSum(a->left, sumL, sumC);
+    totalLoadSum(a->right, sumL, sumC);
 }
 
-int stationCount(Station *a, int *count){
+void stationCount(Station *a, int *count){
     if(a == NULL){
-        return 0;
+        return;
     }
     (*count)++;
     stationCount(a->left, count);
     stationCount(a->right,count);
-
-    return *count;
 }
 
 double stationYield(long long totalCapacity, long long totalLoad){
@@ -146,7 +143,7 @@ double stationYield(long long totalCapacity, long long totalLoad){
 void printInOrder(Station *a) {
     if (a == NULL) return;
     printInOrder(a->left);
-    printf("Station ID: %d, Capacity: %lld, Load: %lld\n", a->id, a->capacity, a->totalLoad);
+    printf("Station ID: %d, Capacity: %lld, Load: %lld, Yield: %lf\n", a->id, a->capacity, a->totalLoad, stationYield(a->capacity, a->totalLoad));
     printInOrder(a->right);
 }
 

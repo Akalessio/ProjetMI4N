@@ -22,9 +22,9 @@ Station *insertStationAVL(Station *, int , long long );
 
 void addLoadStation(Station *, int , long long);
 
-long long totalLoadSum(Station *, long long *);
+void totalLoadSum(Station *, long long *, long long*);
 
-int stationCount(Station *, int *);
+void stationCount(Station *, int *);
 
 double stationYield(long long, long long );
 
