@@ -24,9 +24,9 @@ int main(int argc, char **argv) {
 
     printf("the total load of all the %s station is %lld kWh\n", argv[2], stationsLoad);
     printf("the total capacity of all the %s station is %lld kWh\n", argv[2], stationsCapacity);
-    printf("the total yield of all the %s station is %lf kWh\n", argv[2], stationYield(stationsCapacity, stationsLoad));
+    printf("the total yield of all the %s station is %lf\n", argv[2], stationYield(stationsCapacity, stationsLoad));
 
-    printInOrder(sevastopol);
+    createOutputFile(sevastopol, argv[2], argv[3], argv[4]);
 
     clearAVL(sevastopol);
 

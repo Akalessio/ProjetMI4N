@@ -2,6 +2,21 @@
 argh=0
 arge=0
 
+if [ -f lv_all.csv ]; then
+    rm -rf lv_all.csv
+fi
+if [ -f lv_comp.csv ]; then
+    rm -rf lv_comp.csv
+fi
+if [ -f lv_indiv.csv ]; then
+    rm -rf lv_indiv.csv
+fi
+if [ -f hvb_comp.csv ]; then
+    rm -rf hvb_comp.csv
+fi
+if [ -f hva_comp.csv ]; then
+    rm -rf hva_comp.csv
+fi
 
 
 for arg in "$@"; do
@@ -165,15 +180,39 @@ if [ -z "$4" ]; then
       }
 
       }' OFS=';' "$filename" > tmp/outputstation.csv
-      awk -F';' '
-          NR == 1 { print; next }
-          {
-          if ($4 != "-" && ($5 != "-" || $6 != "-")){
-            $1 = $1 $4
-            print
-          }
+     if [ "$3" == "--all" ]; then
+               awk -F';' '
+                         NR == 1 { print; next }
+                         {
+                         if ($4 != "-" && ($5 != "-" || $6 != "-")){
+                           $1 = $1 $4
+                           print
+                         }
 
-          }' OFS=';' "$filename" > tmp/outputuser.csv
+                         }' OFS=';' "$filename" > tmp/outputuser.csv
+           fi
+           if [ "$3" == "--comp" ]; then
+                    awk -F';' '
+                              NR == 1 { print; next }
+                              {
+                              if ($4 != "-" && $5 != "-"){
+                                $1 = $1 $4
+                                print
+                              }
+
+                              }' OFS=';' "$filename" > tmp/outputuser.csv
+           fi
+           if [ "$3" == "--indiv" ]; then
+                    awk -F';' '
+                              NR == 1 { print; next }
+                              {
+                              if ($4 != "-" && $6 != "-"){
+                                $1 = $1 $4
+                                print
+                              }
+
+                              }' OFS=';' "$filename" > tmp/outputuser.csv
+           fi
   fi
 fi
 
@@ -229,15 +268,39 @@ if [ -n "$4" ]; then
       }
 
       }' OFS=';' "$filename" > tmp/outputstation.csv
-      awk -F';' -v S4="$4" '
-          NR == 1 { print; next }
-          {
-          if ($1 == S4 && $4 != "-" && ($5 != "-" || $6 != "-")){
-            $1 = $1 $4
-            print
-          }
+      if [ "$3" == "--all" ]; then
+          awk -F';' -v S4="$4" '
+                    NR == 1 { print; next }
+                    {
+                    if ($1 == S4 && $4 != "-" && ($5 != "-" || $6 != "-")){
+                      $1 = $1 $4
+                      print
+                    }
 
-          }' OFS=';' "$filename" > tmp/outputuser.csv
+                    }' OFS=';' "$filename" > tmp/outputuser.csv
+      fi
+      if [ "$3" == "--comp" ]; then
+               awk -F';' -v S4="$4" '
+                         NR == 1 { print; next }
+                         {
+                         if ($1 == S4 && $4 != "-" && $5 != "-"){
+                           $1 = $1 $4
+                           print
+                         }
+
+                         }' OFS=';' "$filename" > tmp/outputuser.csv
+      fi
+      if [ "$3" == "--indiv" ]; then
+               awk -F';' -v S4="$4" '
+                         NR == 1 { print; next }
+                         {
+                         if ($1 == S4 && $4 != "-" && $6 != "-"){
+                           $1 = $1 $4
+                           print
+                         }
+
+                         }' OFS=';' "$filename" > tmp/outputuser.csv
+      fi
   fi
 fi
 
@@ -265,6 +328,32 @@ fi
 if [ -z "$4" ]; then
     ./$exec "$1" "$2" "$user"
 fi
+
+if [ -f lv_all.csv ]; then
+    head -n 1 "lv_all.csv" > lv_all_minmax.csv
+    sort -t ':' -k4,4nr "lv_all.csv" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k4,4n "lv_all.csv" | head -n 10 >> lv_all_minmax.csv
+    head -n 1 "lv_all.csv" > tmp/sorting_file
+    sort -t ':' -k2,2n "lv_all.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_all.csv"
+fi
+if [ -f lv_comp.csv ]; then
+    head -n 1 "lv_comp.csv" > tmp/sorting_file
+    sort -t ':' -k2,2n "lv_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_comp.csv"
+fi
+if [ -f lv_indiv.csv ]; then
+    head -n 1 "lv_indiv.csv" > tmp/sorting_file
+    sort -t ':' -k2,2n "lv_indiv.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_indiv.csv"
+fi
+if [ -f hvb_comp.csv ]; then
+    head -n 1 "hvb_comp.csv" > tmp/sorting_file
+    sort -t ':' -k2,2n "hvb_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hvb_comp.csv"
+fi
+if [ -f hva_comp.csv ]; then
+    head -n 1 "hva_comp.csv" > tmp/sorting_file
+    sort -t ':' -k2,2n "hva_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hva_comp.csv"
+fi
+
+
 
 
 
