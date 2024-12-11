@@ -379,14 +379,19 @@ echo "the second sort process lasted for ${elapsed_time} seconds"
 echo -e "\n"
 start_time=$(date +%s)
 
+gnuplot <<EOF
+set terminal png size 1200,800
+set output "graphs/minmaxgraphs.png"
+set xlabel "stations ID"
+set ylabel "kWh"
+set grid
+set datafile separator ":"
+set style line 1 lc rgb "red"
+set style line 2 lc rgb "blue"
+set style fill solid
+set boxwidth 0.8
+set xtics rotate by -45
+plot "lv_all_minmax.csv" using 0:2:xtic(1) with boxes title 'capacity' ls 1, \
+     "lv_all_minmax.csv" using 0:3 with boxes ls 2 title 'load'
 
-
-
-
-
-
-
-
-
-
-
+EOF
