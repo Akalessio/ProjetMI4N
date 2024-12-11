@@ -4,22 +4,7 @@ arge=0
 
 start_time=$(date +%s)
 
-if [ -f lv_all.csv ]; then
-    rm -rf lv_all.csv
-fi
-if [ -f lv_comp.csv ]; then
-    rm -rf lv_comp.csv
-fi
-if [ -f lv_indiv.csv ]; then
-    rm -rf lv_indiv.csv
-fi
-if [ -f hvb_comp.csv ]; then
-    rm -rf hvb_comp.csv
-fi
-if [ -f hva_comp.csv ]; then
-    rm -rf hva_comp.csv
-fi
-
+find . -name "*.csv" -type f -delete
 
 for arg in "$@"; do
     if [ "$arg" == '-h' ]; then
@@ -345,28 +330,47 @@ elapsed_time=$((end_time - start_time))
 echo "the C process lasted for ${elapsed_time} seconds"
 start_time=$(date +%s)
 
+lv_all_plant="lv_all_$4.csv"
+lv_indiv_plant="lv_indiv_$4.csv"
+lv_comp_plant="lv_comp_$4.csv"
+hvb_comp_plant="hvb_comp_$4.csv"
+hva_comp_plant="hva_comp_$4.csv"
+
 if [ -f lv_all.csv ]; then
     head -n 1 "lv_all.csv" > lv_all_minmax.csv
     sort -t ':' -k4,4nr "lv_all.csv" | head -n 10 >> lv_all_minmax.csv
     sort -t ':' -k4,4n "lv_all.csv" | head -n 10 >> lv_all_minmax.csv
-    head -n 1 "lv_all.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "lv_all.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_all.csv"
 fi
+if [ -f "$lv_all_plant" ]; then
+    head -n 1 "$lv_all_plant" > lv_all_minmax.csv
+    sort -t ':' -k4,4nr "$lv_all_plant" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k4,4n "$lv_all_plant" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k2,2n "$lv_all_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_all_plant"
+fi
 if [ -f lv_comp.csv ]; then
-    head -n 1 "lv_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "lv_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_comp.csv"
 fi
+if [ -f "$lv_comp_plant" ]; then
+    sort -t ':' -k2,2n "$lv_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_comp_plant"
+fi
 if [ -f lv_indiv.csv ]; then
-    head -n 1 "lv_indiv.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "lv_indiv.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_indiv.csv"
 fi
+if [ -f "$lv_indiv_plant" ]; then
+    sort -t ':' -k2,2n "$lv_indiv_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_indiv_plant"
+fi
 if [ -f hvb_comp.csv ]; then
-    head -n 1 "hvb_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "hvb_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hvb_comp.csv"
 fi
+if [ -f "$hvb_comp_plant" ]; then
+    sort -t ':' -k2,2n "$hvb_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$hvb_comp_plant"
+fi
 if [ -f hva_comp.csv ]; then
-    head -n 1 "hva_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "hva_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hva_comp.csv"
+fi
+if [ -f "$hva_comp_plant" ]; then
+    sort -t ':' -k2,2n "$hva_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$hva_comp_plant"
 fi
 
 end_time=$(date +%s)
@@ -374,6 +378,12 @@ elapsed_time=$((end_time - start_time))
 echo "the second sort process lasted for ${elapsed_time} seconds"
 echo -e "\n"
 start_time=$(date +%s)
+
+
+
+
+
+
 
 
 
