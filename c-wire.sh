@@ -325,6 +325,12 @@ if [ -f "$lv_all_plant" ]; then
     sort -t ':' -k2,2n "$lv_all_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_all_plant"
     sort -t ':' -k1,1n "lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "lv_all_minmax.csv"
 fi
+if [ -f "$lv_all_plant" ]; then
+    head -n 1 "$lv_all_plant" > lv_all_minmax.csv
+    sort -t ':' -k4,4nr "$lv_all_plant" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k4,4n "$lv_all_plant" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k2,2n "$lv_all_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_all_plant"
+fi
 if [ -f lv_comp.csv ]; then
     sort -t ':' -k2,2n "lv_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_comp.csv"
 fi
@@ -374,3 +380,4 @@ plot "lv_all_minmax.csv" using (column(0)):2:xtic(1) with boxes title 'capacity'
      "lv_all_minmax.csv" using (column(0)+0.4):3 with boxes ls 2 title 'load'
 
 EOF
+
