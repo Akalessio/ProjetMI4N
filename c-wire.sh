@@ -4,22 +4,7 @@ arge=0
 
 start_time=$(date +%s)
 
-if [ -f lv_all.csv ]; then
-    rm -rf lv_all.csv
-fi
-if [ -f lv_comp.csv ]; then
-    rm -rf lv_comp.csv
-fi
-if [ -f lv_indiv.csv ]; then
-    rm -rf lv_indiv.csv
-fi
-if [ -f hvb_comp.csv ]; then
-    rm -rf hvb_comp.csv
-fi
-if [ -f hva_comp.csv ]; then
-    rm -rf hva_comp.csv
-fi
-
+find . -name "*.csv" -type f -delete
 
 for arg in "$@"; do
     if [ "$arg" == '-h' ]; then
@@ -175,49 +160,36 @@ if [ -z "$4" ]; then
 
           }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
-  if [ "$2" == "--lv"  ]; then
-      awk -F';' '
-      NR == 1 { print; next }
-      {
-      if ($4 != "-" && $5 == "-" && $6 == "-" ){
+  if [ "$2" == "--lv" ]; then
+    awk -F';' -v mode="$3" '
+    BEGIN { OFS=";" }
+    NR == 1 {
+      # Print headers to both files
+      print > "tmp/outputstation.csv"
+      print > "tmp/outputuser.csv"
+      next
+    }
+    {
+      # Always process stations
+      if ($4 != "-" && $5 == "-" && $6 == "-") {
         $1 = $1 $4
-        print
+        print > "tmp/outputstation.csv"
       }
 
-      }' OFS=';' "$filename" > tmp/outputstation.csv
-     if [ "$3" == "--all" ]; then
-               awk -F';' '
-                         NR == 1 { print; next }
-                         {
-                         if ($4 != "-" && ($5 != "-" || $6 != "-")){
-                           $1 = $1 $4
-                           print
-                         }
-
-                         }' OFS=';' "$filename" > tmp/outputuser.csv
-           fi
-           if [ "$3" == "--comp" ]; then
-                    awk -F';' '
-                              NR == 1 { print; next }
-                              {
-                              if ($4 != "-" && $5 != "-"){
-                                $1 = $1 $4
-                                print
-                              }
-
-                              }' OFS=';' "$filename" > tmp/outputuser.csv
-           fi
-           if [ "$3" == "--indiv" ]; then
-                    awk -F';' '
-                              NR == 1 { print; next }
-                              {
-                              if ($4 != "-" && $6 != "-"){
-                                $1 = $1 $4
-                                print
-                              }
-
-                              }' OFS=';' "$filename" > tmp/outputuser.csv
-           fi
+      # Process users based on mode
+      if (mode == "--all" && $4 != "-" && ($5 != "-" || $6 != "-")) {
+        $1 = $1 $4
+        print > "tmp/outputuser.csv"
+      }
+      else if (mode == "--comp" && $4 != "-" && $5 != "-") {
+        $1 = $1 $4
+        print > "tmp/outputuser.csv"
+      }
+      else if (mode == "--indiv" && $4 != "-" && $6 != "-") {
+        $1 = $1 $4
+        print > "tmp/outputuser.csv"
+      }
+    }' "$filename"
   fi
 fi
 
@@ -263,50 +235,38 @@ if [ -n "$4" ]; then
 
           }' OFS=';' "$filename" > tmp/outputuser.csv
   fi
-  if [ "$2" == "--lv"  ]; then
-      awk -F';' -v S4="$4" '
-      NR == 1 { print; next }
-      {
-      if ($1 == S4 && $4 != "-" && $5 == "-" && $6 == "-" ){
+  if [ "$2" == "--lv" ]; then
+    awk -F';' -v S4="$4" -v mode="$3" '
+    BEGIN { OFS=";" }
+    NR == 1 {
+      # Print header to both files once
+      print > "tmp/outputstation.csv"
+      print > "tmp/outputuser.csv"
+      next
+    }
+    {
+      # Always process stations
+      if ($1 == S4 && $4 != "-" && $5 == "-" && $6 == "-") {
         $1 = $1 $4
-        print
+        print > "tmp/outputstation.csv"
       }
 
-      }' OFS=';' "$filename" > tmp/outputstation.csv
-      if [ "$3" == "--all" ]; then
-          awk -F';' -v S4="$4" '
-                    NR == 1 { print; next }
-                    {
-                    if ($1 == S4 && $4 != "-" && ($5 != "-" || $6 != "-")){
-                      $1 = $1 $4
-                      print
-                    }
-
-                    }' OFS=';' "$filename" > tmp/outputuser.csv
-      fi
-      if [ "$3" == "--comp" ]; then
-               awk -F';' -v S4="$4" '
-                         NR == 1 { print; next }
-                         {
-                         if ($1 == S4 && $4 != "-" && $5 != "-"){
-                           $1 = $1 $4
-                           print
-                         }
-
-                         }' OFS=';' "$filename" > tmp/outputuser.csv
-      fi
-      if [ "$3" == "--indiv" ]; then
-               awk -F';' -v S4="$4" '
-                         NR == 1 { print; next }
-                         {
-                         if ($1 == S4 && $4 != "-" && $6 != "-"){
-                           $1 = $1 $4
-                           print
-                         }
-
-                         }' OFS=';' "$filename" > tmp/outputuser.csv
-      fi
+      # Process users based on mode
+      if (mode == "--all" && $1 == S4 && $4 != "-" && ($5 != "-" || $6 != "-")) {
+        $1 = $1 $4
+        print > "tmp/outputuser.csv"
+      }
+      else if (mode == "--comp" && $1 == S4 && $4 != "-" && $5 != "-") {
+        $1 = $1 $4
+        print > "tmp/outputuser.csv"
+      }
+      else if (mode == "--indiv" && $1 == S4 && $4 != "-" && $6 != "-") {
+        $1 = $1 $4
+        print > "tmp/outputuser.csv"
+      }
+    }' "$filename"
   fi
+
 fi
 
 end_time=$(date +%s)
@@ -345,28 +305,49 @@ elapsed_time=$((end_time - start_time))
 echo "the C process lasted for ${elapsed_time} seconds"
 start_time=$(date +%s)
 
+lv_all_plant="lv_all_$4.csv"
+lv_indiv_plant="lv_indiv_$4.csv"
+lv_comp_plant="lv_comp_$4.csv"
+hvb_comp_plant="hvb_comp_$4.csv"
+hva_comp_plant="hva_comp_$4.csv"
+
 if [ -f lv_all.csv ]; then
     head -n 1 "lv_all.csv" > lv_all_minmax.csv
     sort -t ':' -k4,4nr "lv_all.csv" | head -n 10 >> lv_all_minmax.csv
     sort -t ':' -k4,4n "lv_all.csv" | head -n 10 >> lv_all_minmax.csv
-    head -n 1 "lv_all.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "lv_all.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_all.csv"
+    sort -t ':' -k1,1n "lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "lv_all_minmax.csv"
+fi
+if [ -f "$lv_all_plant" ]; then
+    head -n 1 "$lv_all_plant" > lv_all_minmax.csv
+    sort -t ':' -k4,4nr "$lv_all_plant" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k4,4n "$lv_all_plant" | head -n 10 >> lv_all_minmax.csv
+    sort -t ':' -k2,2n "$lv_all_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_all_plant"
+    sort -t ':' -k1,1n "lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "lv_all_minmax.csv"
 fi
 if [ -f lv_comp.csv ]; then
-    head -n 1 "lv_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "lv_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_comp.csv"
 fi
+if [ -f "$lv_comp_plant" ]; then
+    sort -t ':' -k2,2n "$lv_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_comp_plant"
+fi
 if [ -f lv_indiv.csv ]; then
-    head -n 1 "lv_indiv.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "lv_indiv.csv" >> tmp/sorting_file && mv tmp/sorting_file "lv_indiv.csv"
 fi
+if [ -f "$lv_indiv_plant" ]; then
+    sort -t ':' -k2,2n "$lv_indiv_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_indiv_plant"
+fi
 if [ -f hvb_comp.csv ]; then
-    head -n 1 "hvb_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "hvb_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hvb_comp.csv"
 fi
+if [ -f "$hvb_comp_plant" ]; then
+    sort -t ':' -k2,2n "$hvb_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$hvb_comp_plant"
+fi
 if [ -f hva_comp.csv ]; then
-    head -n 1 "hva_comp.csv" > tmp/sorting_file
     sort -t ':' -k2,2n "hva_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "hva_comp.csv"
+fi
+if [ -f "$hva_comp_plant" ]; then
+    sort -t ':' -k2,2n "$hva_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$hva_comp_plant"
 fi
 
 end_time=$(date +%s)
@@ -375,8 +356,21 @@ echo "the second sort process lasted for ${elapsed_time} seconds"
 echo -e "\n"
 start_time=$(date +%s)
 
+gnuplot <<EOF
+set terminal png size 1200,800
+set output "graphs/minmaxgraphs.png"
+set xlabel "stations ID"
+set ylabel "kWh"
+set grid
+set datafile separator ":"
+set style line 1 lc rgb "red"
+set style line 2 lc rgb "blue"
+set style fill solid
+set boxwidth 0.4
+set xtics rotate by -45
+set offset 0,0,0,0
 
+plot "lv_all_minmax.csv" using (column(0)):2:xtic(1) with boxes title 'capacity' ls 1, \
+     "lv_all_minmax.csv" using (column(0)+0.4):3 with boxes ls 2 title 'load'
 
-
-
-
+EOF

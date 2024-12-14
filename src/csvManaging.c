@@ -83,10 +83,10 @@ void createOutputFile(Station *sevastopol, char *type, char *user, char *plantID
     fileCheck(outputProcessedStationFile);
 
     if(strcmp(type, "lv") == 0 && strcmp(user, "all") == 0){
-        fprintf(outputProcessedStationFile, "ID_%s:Capacity:Load_%s:factor\n", type, user);
+        fprintf(outputProcessedStationFile, "#ID_%s:Capacity:Load_%s:factor\n", type, user);
         printInFileLVALL(sevastopol, outputProcessedStationFile);
     }else{
-        fprintf(outputProcessedStationFile, "ID_%s:Capacity:Load_%s\n", type, user);
+        fprintf(outputProcessedStationFile, "#ID_%s:Capacity:Load_%s\n", type, user);
         printInFile(sevastopol, outputProcessedStationFile);
     }
 }
