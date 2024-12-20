@@ -5,6 +5,7 @@
 #include "avl.h"
 #include "fonx.h"
 
+//read the file and create each station in the outuputstation.csv file
 Station *stationFileReading(){
     FILE *file = fopen("../tmp/outputstation.csv", "r+");
 
@@ -26,6 +27,7 @@ Station *stationFileReading(){
     return sevastopol;
 }
 
+//read the file and add the load ot each station based on the outputuser.csv file
 Station *userFileReading(Station *sevastopol){
     FILE *file = fopen("../tmp/outputuser.csv", "r+");
 
@@ -46,12 +48,15 @@ Station *userFileReading(Station *sevastopol){
 
 }
 
+//print the tree in the main output file
 void printInFile(Station *a, FILE *filename) {
     if (a == NULL) return;
     printInFile(a->left, filename);
     fprintf(filename, "%d:%lld:%lld\n", a->id, a->capacity, a->totalLoad);
     printInFile(a->right, filename);
 }
+
+//print the tree in the csv output file but with the factor so it can be processed in a minmax file (lv all case)
 void printInFileLVALL(Station *a, FILE *filename) {
     if (a == NULL) return;
     printInFileLVALL(a->left, filename);
@@ -63,7 +68,7 @@ void printInFileLVALL(Station *a, FILE *filename) {
     printInFileLVALL(a->right, filename);
 }
 
-
+//create the output file
 void createOutputFile(Station *sevastopol, char *type, char *user, char *plantID){
     char filename[30] = "";
     type = &type[2];
