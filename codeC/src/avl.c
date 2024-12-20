@@ -3,6 +3,7 @@
 #include "avl.h"
 #include "fonx.h"
 
+//build an AVL node which is called station
 Station *buildStation(int id, long long capacity){
     Station *a = malloc(sizeof(Station));
     if(a == NULL){
@@ -17,6 +18,8 @@ Station *buildStation(int id, long long capacity){
 
     return a;
 }
+
+//update the height of a station
 void updateHeight(Station *a){
     if(a->right != NULL && a->left != NULL) {
         a->height = maxInt(a->left->height, a->right->height) + 1;
@@ -29,6 +32,7 @@ void updateHeight(Station *a){
     }
 }
 
+//left rotating the AVL tree 
 Station *rotateLeft(Station *a){
     Station *pivot;
 
@@ -42,6 +46,7 @@ Station *rotateLeft(Station *a){
     return pivot;
 }
 
+//right rotating the AVL tree 
 Station *rotateRight(Station *a){
     Station *pivot;
 
@@ -55,6 +60,7 @@ Station *rotateRight(Station *a){
     return pivot;
 }
 
+//insert a station in the tree and balance the tree
 Station *insertStationAVL(Station *a, int id, long long capacity){
     int balance = 0;
 
@@ -101,6 +107,7 @@ Station *insertStationAVL(Station *a, int id, long long capacity){
     return a;
 }
 
+//add the load of an user to a station
 void addLoadStation(Station *a, int id, long long load){
     if(a == NULL){
         return;
@@ -115,6 +122,7 @@ void addLoadStation(Station *a, int id, long long load){
     }
 }
 
+//process the total load of a tree
 void totalLoadSum(Station *a, long long *sumL, long long *sumC){
     if(a == NULL){
         return;
@@ -125,6 +133,7 @@ void totalLoadSum(Station *a, long long *sumL, long long *sumC){
     totalLoadSum(a->right, sumL, sumC);
 }
 
+//count the number of station on the tree
 void stationCount(Station *a, int *count){
     if(a == NULL){
         return;
@@ -134,12 +143,14 @@ void stationCount(Station *a, int *count){
     stationCount(a->right,count);
 }
 
+//calculate the yield of each station
 double stationYield(long long totalCapacity, long long totalLoad){
     double a = (double)totalLoad / totalCapacity;
     a = a*100;
     return a;
 }
 
+//print the tree
 void printInOrder(Station *a) {
     if (a == NULL) return;
     printInOrder(a->left);
@@ -147,6 +158,7 @@ void printInOrder(Station *a) {
     printInOrder(a->right);
 }
 
+//free the tree
 void clearAVL(Station *a){
     if(a == NULL){
         return;
