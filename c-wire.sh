@@ -179,19 +179,16 @@ if [ -z "$4" ]; then
     awk -F';' -v mode="$3" '
     BEGIN { OFS=";" }
     NR == 1 {
-      # Print headers to both files
       print > "tmp/outputstation.csv"
       print > "tmp/outputuser.csv"
       next
     }
     {
-      # Always process stations
       if ($4 != "-" && $5 == "-" && $6 == "-") {
         $1 = $1 $4
         print > "tmp/outputstation.csv"
       }
 
-      # Process users based on mode
       if (mode == "--all" && $4 != "-" && ($5 != "-" || $6 != "-")) {
         $1 = $1 $4
         print > "tmp/outputuser.csv"
@@ -255,19 +252,15 @@ if [ -n "$4" ]; then
     awk -F';' -v S4="$4" -v mode="$3" '
     BEGIN { OFS=";" }
     NR == 1 {
-      # Print header to both files once
       print > "tmp/outputstation.csv"
       print > "tmp/outputuser.csv"
       next
     }
     {
-      # Always process stations
       if ($1 == S4 && $4 != "-" && $5 == "-" && $6 == "-") {
         $1 = $1 $4
         print > "tmp/outputstation.csv"
       }
-
-      # Process users based on mode
       if (mode == "--all" && $1 == S4 && $4 != "-" && ($5 != "-" || $6 != "-")) {
         $1 = $1 $4
         print > "tmp/outputuser.csv"
