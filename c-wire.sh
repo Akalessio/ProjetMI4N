@@ -330,14 +330,14 @@ if [ -f codeC/lv_all.csv ]; then
     sort -t ':' -k3,3nr "codeC/lv_all.csv" | head -n 11 >> codeC/lv_all_minmax.csv
     sort -t ':' -k3,3n "codeC/lv_all.csv" | head -n 10 >> codeC/lv_all_minmax.csv
     sort -t ':' -k2,2n "codeC/lv_all.csv" >> tmp/sorting_file && mv tmp/sorting_file "codeC/lv_all.csv"
-    sort -t ':' -k4,4nr "codeC/lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "codeC/lv_all_minmax.csv"
+    sort -t ':' -k4,4n "codeC/lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "codeC/lv_all_minmax.csv"
 fi
 if [ -f "$lv_all_plant" ]; then
     head -n 1 "$lv_all_plant" > codeC/lv_all_minmax.csv
     sort -t ':' -k3,3nr "$lv_all_plant" | head -n 11 >> codeC/lv_all_minmax.csv
     sort -t ':' -k3,3n "$lv_all_plant" | head -n 10 >> codeC/lv_all_minmax.csv
     sort -t ':' -k2,2n "$lv_all_plant" >> tmp/sorting_file && mv tmp/sorting_file "$lv_all_plant"
-    sort -t ':' -k4,4nr "codeC/lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "codeC/lv_all_minmax.csv"
+    sort -t ':' -k4,4n "codeC/lv_all_minmax.csv" >> tmp/sorting_file2 && mv tmp/sorting_file2 "codeC/lv_all_minmax.csv"
 fi
 if [ -f codeC/lv_comp.csv ]; then
     sort -t ':' -k2,2n "codeC/lv_comp.csv" >> tmp/sorting_file && mv tmp/sorting_file "codeC/lv_comp.csv"
