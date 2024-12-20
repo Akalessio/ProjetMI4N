@@ -4,14 +4,17 @@ arge=0
 
 start_time=$(date +%s)
 
+#delete all csv files
 find . -name "*.csv" -type f -delete
 
+#check if one of the arguments is h
 for arg in "$@"; do
     if [ "$arg" == '-h' ]; then
       argh=1
     fi
 done
 
+#check if the number of arguments is correct
 if [ $argh -ne 1 ]; then
     if [ $# -gt 5 ] || [ $# -lt 3 ]; then
       if [ $# -gt 5 ]; then
@@ -32,6 +35,7 @@ fi
 
 filename="input/$(basename "$1")"
 
+#check if the filepath is right
 if [ ! -e "$1" ];then
             echo "==================================================="
             echo "Error CSV File do not exist or wrong File Path argument"
@@ -40,6 +44,7 @@ if [ ! -e "$1" ];then
             arge=1
 fi
 
+#check if the station type arguments is right
 if [ "$2" != "--hva" ] && [ "$2" != "--lv" ] && [ "$2" != "--hvb" ]; then
           echo "==============================================="
           echo "Error wrong Station type argument"
@@ -48,6 +53,7 @@ if [ "$2" != "--hva" ] && [ "$2" != "--lv" ] && [ "$2" != "--hvb" ]; then
           arge=1
 fi
 
+#check if the user type arguments is right
 if [ "$3" != "--comp" ] && [ "$3" != "--indiv" ] && [ "$3" != "--all" ]; then
           echo "==============================================="
           echo "Error wrong User type argument"
@@ -56,6 +62,7 @@ if [ "$3" != "--comp" ] && [ "$3" != "--indiv" ] && [ "$3" != "--all" ]; then
           arge=1
 fi
 
+#handle the case of hvb and indiv which is not possible
 if [ "$2" == "--hvb" ] && [ "$3" == "--indiv" ]; then
           echo "==============================================="
           echo "There are no individual connected to HVB station"
@@ -64,6 +71,7 @@ if [ "$2" == "--hvb" ] && [ "$3" == "--indiv" ]; then
           exit 3
 fi
 
+#handle the case of hva and indiv which is not possible
 if [ "$2" == "--hva" ] && [ "$3" == "--indiv" ]; then
           echo "==============================================="
           echo "There are no individual connected to HVA station"
@@ -74,6 +82,7 @@ fi
 
 user="$3"
 
+#handle the case of hvb and all which is not possible and convert it to a comp
 if [ "$2" == "--hvb" ] && [ "$3" == "--all" ]; then
           echo "=========================================================================================="
           echo "There are no individual connected to HVB station so the programm will process only company"
@@ -81,6 +90,7 @@ if [ "$2" == "--hvb" ] && [ "$3" == "--all" ]; then
           user="--comp"
 fi
 
+#handle the case of hva and all which is not possible and convert it to a comp
 if [ "$2" == "--hva" ] && [ "$3" == "--all" ]; then
           echo "=========================================================================================="
           echo "There are no individual connected to HVA station so the programm will process only company"
@@ -88,6 +98,7 @@ if [ "$2" == "--hva" ] && [ "$3" == "--all" ]; then
           user="--comp"
 fi
 
+#show the help if -h is present or if there's an error in the arguments
 if [ $argh -eq 1 ] || [ $arge -eq 1 ]; then
     echo "this script is used to measure the rate of energy consumption / energy produced of an electrical network and display information for each type of station"
     echo "    Mandatory arguments (in order):"
@@ -106,19 +117,23 @@ fi
 graphdir="graphs"
 tmpdir="tmp"
 
+#create the graphs folder if not here
 if [ ! -d $graphdir ]; then
     mkdir $graphdir
 fi
 
+#delete and create the tmp folder if he was already existing
 if [ -d $tmpdir ]; then
     rm -rf $tmpdir
     mkdir $tmpdir
 fi
 
+#create the tmp folder if not here
 if [ ! -d $tmpdir ]; then
     mkdir $tmpdir
 fi
 
+#filter the csv file and output the right station and user in two different file 'outputstation.csv' 'and outputuser.csv' in the case with no specific powerplant
 if [ -z "$4" ]; then
  if [ "$2" == "--hvb"  ]; then
       awk -F';' '
@@ -193,6 +208,7 @@ if [ -z "$4" ]; then
   fi
 fi
 
+#filter the csv file and output the right station and user in two different file 'outputstation.csv' 'and outputuser.csv' in the case with a specific powerplant
 if [ -n "$4" ]; then
 
   if [ "$2" == "--hvb"  ]; then
@@ -269,6 +285,7 @@ if [ -n "$4" ]; then
 
 fi
 
+#show time of the sort process
 end_time=$(date +%s)
 elapsed_time=$((end_time - start_time))
 echo "the sort process lasted for ${elapsed_time} seconds"
@@ -276,6 +293,7 @@ start_time=$(date +%s)
 
 exec="codeC/projetMI4N"
 
+#use the makefile to compile the executable if is not already existing
 if [ ! -f $exec ]; then
   echo -e "\n"
   echo "no executable found, trying compilation with make"
@@ -291,14 +309,17 @@ if [ ! -f $exec ]; then
   fi
 fi
 
+#execute the C programm with a specific power plant
 if [ -n "$4" ]; then
     (cd codeC && ./projetMI4N "$1" "$2" "$user" "$4")
 fi
 
+#execute the C programm with no specific power plant
 if [ -z "$4" ]; then
     (cd codeC && ./projetMI4N "$1" "$2" "$user")
 fi
 
+#show the C process duration
 end_time=$(date +%s)
 elapsed_time=$((end_time - start_time))
 echo "the C process lasted for ${elapsed_time} seconds"
@@ -310,6 +331,7 @@ lv_comp_plant="codeC/lv_comp_$4.csv"
 hvb_comp_plant="codeC/hvb_comp_$4.csv"
 hva_comp_plant="codeC/hva_comp_$4.csv"
 
+#sort the output file of the C programm and create the minmax file in case of --lv --all arugments
 if [ -f codeC/lv_all.csv ]; then
     head -n 1 "codeC/lv_all.csv" > codeC/lv_all_minmax.csv
     sort -t ':' -k3,3nr "codeC/lv_all.csv" | head -n 11 >> codeC/lv_all_minmax.csv
@@ -349,12 +371,14 @@ if [ -f "$hva_comp_plant" ]; then
     sort -t ':' -k2,2n "$hva_comp_plant" >> tmp/sorting_file && mv tmp/sorting_file "$hva_comp_plant"
 fi
 
+#show the duration of the second sorting process
 end_time=$(date +%s)
 elapsed_time=$((end_time - start_time))
 echo "the second sort process lasted for ${elapsed_time} seconds"
 echo -e "\n"
 start_time=$(date +%s)
 
+#create a graph of the minmax.csv file
 gnuplot <<EOF
 set terminal png size 1200,800
 set output "graphs/minmaxgraphs.png"
