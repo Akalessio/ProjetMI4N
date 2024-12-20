@@ -1,6 +1,7 @@
 #ifndef PROJETMI4N_AVL_H
 #define PROJETMI4N_AVL_H
 
+//struct for the avl tree
 typedef struct station{
     int id;
     long long capacity;
