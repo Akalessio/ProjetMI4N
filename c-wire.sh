@@ -371,7 +371,8 @@ echo "the second sort process lasted for ${elapsed_time} seconds"
 echo -e "\n"
 start_time=$(date +%s)
 
-#create a graph of the minmax.csv file
+#create a graph of the minmax.csv file if the minmax file exist
+if [ -f "codeC/lv_all_minmax.csv" ]; then
 gnuplot <<EOF
 set terminal png size 1200,800
 set output "graphs/minmaxgraphs.png"
@@ -390,4 +391,5 @@ plot "codeC/lv_all_minmax.csv" using (column(0)):2:xtic(1) with boxes title 'cap
      "codeC/lv_all_minmax.csv" using (column(0)+0.4):3 with boxes ls 2 title 'load'
 
 EOF
+fi
 
