@@ -1,23 +1,52 @@
 # Projet C-Wire
 
-Ce projet realiser par le groupe MI4N permet de faire la synthèse de données d’un système de distribution d’électricité.
+This project realised by the MI4N group makes it possible to synthesize data from an electricity distribution system.
 
-## Module du programme 
-le programme est divisé en 2 parties : 
+## Programm 
+the programm is divided in 2 parts : 
 
-### -Le Code C
-qui comprend les fichiers :
+### -The C code
+in the codeC folder you can find the following files :
 
-.h dans le dossier /include
+.h in the "/include" folder
 
-.c dans le dossier /src
+.c in the "/src" folder
 
-et .o dans le dossier /obj
+and .o in the "/obj" folder
 
-ainsi que le Makefile qui créera l'executable projetMI4N dans ce meme dossier
+and the Makefile which will compile into the target executable named "projetMI4N"
 
-### -Le Shell 
+### -the Shell script
+named c-wire.sh this script is used to start the programm compile a C executable if its not already existing and process the given file with the specific argument into another .csv file 
 
+(or two in the lv all case which will genereate the lv_all_minmax.csv file and a graph)
+
+```bash
+./c-wire.sh arg1 arg2 arg3 arg4
+```
+#### arg1 should alawys be the csv file path for example if the file is named "c-wire_v25.dat" the argument will be 
+```bash
+./c-wire.sh input/c-wire_v25.dat arg2 arg3 arg4
+```
+#### arg2 should alawys be the station type
+there are 3 type lv, hva, hvb and there are always preceded by "--" for example if you want to process the lv type
+```bash
+./c-wire.sh input/c-wire_v25.dat --lv arg3 arg4
+```
+#### arg3 should alawys be the user type
+there are 3 type comp, indiv, all and there are always preceded by "--" for example if you want to process the all type
+```bash
+./c-wire.sh input/c-wire_v25.dat --lv --all arg4
+```
+#### arg4 is optional
+it should be a number based on the number of powerPlant if the power Plant is not existing it should return an empty .csv file
+```bash
+./c-wire.sh input/c-wire_v25.dat --lv --all 1
+```
+or no specific power plant :
+```bash
+./c-wire.sh input/c-wire_v25.dat --lv --all
+```
 
 
 
