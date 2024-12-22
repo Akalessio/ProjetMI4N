@@ -53,6 +53,8 @@ or no specific power plant :
 - Our project includes a bar graph of the 10 most loaded LV posts, and the 10 least busy LV posts. made using gnuplot
 - in the rendered file the station identifier is modified to have as the first digit the number of the central unit to which it is connected and then directly pasted the identifier
 
+[Pdf file](Read-me.pdf)
+
 
  ## Contributors
 
