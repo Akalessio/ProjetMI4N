@@ -48,7 +48,7 @@ or no specific power plant :
 ./c-wire.sh input/c-wire_v25.dat --lv --all
 ```
 
-## special featiures of the project
+## special features of the project
  
 - Our project includes a bar graph of the 10 most loaded LV posts, and the 10 least busy LV posts. made using gnuplot
 - in the rendered file the station identifier is modified to have as the first digit the number of the central unit to which it is connected and then directly pasted the identifier
