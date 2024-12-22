@@ -48,28 +48,13 @@ or no specific power plant :
 ./c-wire.sh input/c-wire_v25.dat --lv --all
 ```
 
-
-
-## Fonctionnement 
-
-Pour faire marcher le programme il est neccesaire d'instaler gnuplot si ce n'est pas deja fait a l'aide de la commande :
-```bash
- sudo apt install gnuplot 
-```
-maintenant que gnuplot est installer on peut executer le script shell a l'aide de la commande :
-
-```bash
-./c-wire.sh
-```
-(avec 3 a 5 arguments possible )
-
-## Particularité de notre projet 
+## special featiures of the project
  
-- Notre projet comporte un graphiqe en barre des 10 postes LV les plus chargés, et les 10 postes LV les moins chargés. realisé a l'aide de gnuplot 
-- dans le fichier de rendu l’identifiant station est modifié pour avoir en premier chiffre le numéro de la centrale a laquelle il est relié et ensuite directement collé l’identifiant
+- Our project includes a bar graph of the 10 most loaded LV posts, and the 10 least busy LV posts. made using gnuplot
+- in the rendered file the station identifier is modified to have as the first digit the number of the central unit to which it is connected and then directly pasted the identifier
 
 
- ## Contributeur 
+ ## Contributors
 
 - [@Wielss](https://github.com/Wielss)
 - [@Akalessio](https://github.com/Akalessio)
