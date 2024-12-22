@@ -6,7 +6,12 @@ Ce projet realiser par le groupe MI4N permet de faire la synthèse de données d
 le programme est divisé en 2 parties : 
 
 ### -Le Code C
-qui comprend les fichiers .h .c et .o 
+qui comprend les fichiers :
+.h dans le dossier /include
+.c dans le dossier /src
+et .o dans le dossier /obj
+ainsi que le Makefile qui créera l'executable projetMI4N dans ce meme dossier
+
 ### -Le Shell 
 
 
